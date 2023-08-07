@@ -3,12 +3,13 @@ const googleQR = require("../externalAPIs/googleQR");
 const requestInvoice = require("../externalAPIs/lnUrl");
 
 module.exports = {
-  name: "createInvoice",
+  name: "donate",
+  args: ["sats"],
   description: "Crea facturas de lightning network",
 
-  run: (client, message, args) => {
-    const address = args[0];
-    const satsToSend = args[1];
+  run: (client, interaction, args) => {
+    const address = "pozo@lacrypta.ar";
+    const satsToSend = args[0];
 
     if (!address || !satsToSend) throw new Error("Send args");
 
@@ -26,7 +27,7 @@ module.exports = {
           .setDescription(`${satsToSend} sats para ${address}`)
           .setImage(QRUrl);
 
-        message.channel.send({
+        interaction.channel.send({
           embeds: [embed],
         });
       }

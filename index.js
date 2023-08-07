@@ -24,12 +24,39 @@ client.on("messageCreate", async (message) => {
   const prefix = "!";
   if (!message.content.startsWith(prefix)) return null;
 
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  if (message.content === "!deploy") {
+    await message.guild.commands.set([
+      {
+        name: "donate",
+        description: "Create lightning network Invoice",
+        options: [
+          {
+            name: "sats",
+            type: 3,
+            description: "Amount of satoshis",
+            required: true,
+          },
+        ],
+      },
+    ]);
 
-  const command = args.shift();
-  const cmd = client.commands.get(command);
+    await message.reply("Deployed!");
+  }
+});
 
-  if (cmd) cmd.run(client, message, args);
+client.on("interactionCreate", async (interaction) => {
+  const cmd = client.commands.get(interaction.commandName);
+  if (cmd) {
+    const args = [];
+
+    for (let i = 0; i < cmd.args.length; i++) {
+      const element = cmd.args[i];
+      const argument = interaction.options.get(element).value;
+      if (argument) args.push(interaction.options.get(element).value);
+    }
+
+    cmd.run(client, interaction, args);
+  }
 });
 
 client.login(config.token);
