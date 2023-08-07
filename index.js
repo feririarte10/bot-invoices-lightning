@@ -46,6 +46,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("interactionCreate", async (interaction) => {
   const cmd = client.commands.get(interaction.commandName);
+
   if (cmd) {
     const args = [];
 
@@ -55,7 +56,8 @@ client.on("interactionCreate", async (interaction) => {
       if (argument) args.push(interaction.options.get(element).value);
     }
 
-    cmd.run(client, interaction, args);
+    interaction.reply("Generando factura de lightning...");
+    return cmd.run(client, interaction, args);
   }
 });
 
